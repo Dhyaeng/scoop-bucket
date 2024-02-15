@@ -24,4 +24,5 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CURRENT_USER\SOFTWARE\7-Zip-Zstandard\Options]
 "MenuIcons"=dword:00000001
-"CascadedMenu"=dword:00000001
+"CascadedMenu"=dword:00000000
+"ContextMenu"=dword:40000120
