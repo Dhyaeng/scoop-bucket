@@ -1,0 +1,71 @@
+{
+    "version": "23.01",
+    "description": "7-Zip with support for Brotli, Fast-LZMA2, Lizard, LZ4, LZ5 and Zstandard ",
+    "homepage": "https://mcmilk.de/projects/7-Zip-zstd/",
+    "license": "https://github.com/mcmilk/7-Zip-zstd?tab=License-1-ov-file#readme",
+    "notes": "",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/mcmilk/7-Zip-zstd/releases/download/v22.01-v1.5.5-R3/7z22.01-zstd-x64.exe",
+            "hash": "d542d78397bbed8e77c221f36cad461a0d83f1263b993a7048e81df40f403fb8"
+        },
+        "32bit": {
+            "url": "https://github.com/mcmilk/7-Zip-zstd/releases/download/v22.01-v1.5.5-R3/7z22.01-zstd-x32.exe",
+            "hash": "cc1b8c360656df516684c61da2b23e2185e27c23d255fd3db6a792373dcc1ba3"
+        },
+        "arm64": {
+            "url": "https://github.com/mcmilk/7-Zip-zstd/releases/download/v22.01-v1.5.5-R3/7z22.01-zstd-arm64.exe",
+            "hash": "67ece4af43d15f98c48cf5acf515c1fcb35036b91aefdea5a9952e51987390e2"
+        }
+    },
+    "pre_install": [
+        "$7zr = Join-Path $env:TMP '7zr.exe'",
+        "Invoke-WebRequest https://www.7-zip.org/a/7zr.exe -OutFile $7zr",
+        "Invoke-ExternalCommand $7zr @('x', \"$dir\\$fname\", \"-o$dir\", '-y') | Out-Null",
+        "Remove-Item \"$dir\\Uninstall.exe\", \"$dir\\$fname\", $7zr"
+    ],
+    "post_install": [
+        "$7zip_root = \"$dir\".Replace('\\', '\\\\')",
+        "'shellx-install.reg', 'shellx-uninstall.reg' | ForEach-Object {",
+        "    $content = Get-Content \"$bucketsdir\\dhyaeng\\scripts\\7-Zip-Zstandard\\$_\"",
+        "    $content = $content.Replace('$7zip_root', $7zip_root)",
+        "    if ($global) {",
+        "       $content = $content.Replace('HKEY_CURRENT_USER', 'HKEY_LOCAL_MACHINE')",
+        "    }",
+        "    Set-Content \"$dir\\$_\" $content -Encoding Ascii",
+        "}"
+    ],
+    "bin": [
+        "7z.exe",
+        "7za.exe",
+        "7zFM.exe",
+        "7zG.exe"
+    ],
+    "shortcuts": [
+        [
+            "7zFM.exe",
+            "7-Zip ZS"
+        ]
+    ],
+    "persist": [
+        "Codecs",
+        "Formats"
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repositories/61958135/releases",
+        "jsonpath": "$[0].tag_name"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/mcmilk/7-Zip-zstd/releases/download/$version/7z$matchHead-zstd-x64.exe"
+            },
+            "32bit": {
+                "url": "https://github.com/mcmilk/7-Zip-zstd/releases/download/$version/7z$matchHead-zstd-x32.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/mcmilk/7-Zip-zstd/releases/download/$version/7z$matchHead-zstd-arm64.exe"
+            }
+        }
+    }
+}
