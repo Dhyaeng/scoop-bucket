@@ -1,5 +1,5 @@
 {
-    "version": "23.01",
+    "version": "v22.01-v1.5.5-R3",
     "description": "7-Zip with support for Brotli, Fast-LZMA2, Lizard, LZ4, LZ5 and Zstandard ",
     "homepage": "https://mcmilk.de/projects/7-Zip-zstd/",
     "license": "https://github.com/mcmilk/7-Zip-zstd?tab=License-1-ov-file#readme",
