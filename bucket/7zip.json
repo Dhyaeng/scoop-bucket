@@ -25,15 +25,26 @@
         "Remove-Item \"$dir\\Uninstall.exe\", \"$dir\\$fname\", $7zr"
     ],
     "post_install": [
-        "$7zip_root = \"$dir\".Replace('\\', '\\\\')",
-        "'shellx-install.reg', 'shellx-uninstall.reg' | ForEach-Object {",
-        "    $content = Get-Content \"$bucketsdir\\dhyaeng\\scripts\\7-Zip-Zstandard\\$_\"",
-        "    $content = $content.Replace('$7zip_root', $7zip_root)",
-        "    if ($global) {",
-        "       $content = $content.Replace('HKEY_CURRENT_USER', 'HKEY_LOCAL_MACHINE')",
-        "    }",
-        "    Set-Content \"$dir\\$_\" $content -Encoding Ascii",
-        "}"
+        "reg add \"HKCU\\Software\\Classes\\CLSID\\{23170F69-20BB-278A-1000-000100020000}\" \/d \"7-Zip Shell Extension\" \/f",
+        "reg add \"HKCU\\Software\\Classes\\CLSID\\{23170F69-20BB-278A-1000-000100020000}\\InprocServer32\" \/d \"$env:UserProfile\\scoop\\apps\\7zip\\current\\7-zip.dll\" \/f",
+        "reg add \"HKCU\\Software\\Classes\\CLSID\\{23170F69-20BB-278A-1000-000100020000}\\InprocServer32\" \/v \"ThreadingModel\" \/d \"Apartment\" \/f",
+        "reg add HKCU\\Software\\Classes\\*\\shellex\\ContextMenuHandlers\\7-Zip-Zstandard \/d \"{23170F69-20BB-278A-1000-000100020000}\" \/f",
+        "reg add HKCU\\Software\\Classes\\Directory\\shellex\\ContextMenuHandlers\\7-Zip-Zstandard \/d \"{23170F69-20BB-278A-1000-000100020000}\" \/f",
+        "reg add HKCU\\Software\\Classes\\Folder\\shellex\\ContextMenuHandlers\\7-Zip-Zstandard \/d \"{23170F69-20BB-278A-1000-000100020000}\" \/f",
+        "reg add HKCU\\Software\\Classes\\Directory\\shellex\\DragDropHandlers\\7-Zip-Zstandard \/d \"{23170F69-20BB-278A-1000-000100020000}\" \/f",
+        "reg add HKCU\\Software\\Classes\\Drive\\shellex\\DragDropHandlers\\7-Zip-Zstandard \/d \"{23170F69-20BB-278A-1000-000100020000}\" \/f",
+        "reg add HKCU\\SOFTWARE\\7-Zip-Zstandard\\Options \/v \"CascadedMenu\" \/t REG_DWORD \/d 0x00000000 \/f",
+        "reg add HKCU\\SOFTWARE\\7-Zip-Zstandard\\Options \/v \"ContextMenu\" \/t REG_DWORD \/d 0x40000141 \/f",
+        "reg add HKCU\\SOFTWARE\\7-Zip-Zstandard\\Options \/v \"MenuIcons\" \/t REG_DWORD \/d 0x00000001 \/f"
+    ],
+    "pre_uninstall": [
+        "reg delete \"HKCU\\Software\\Classes\\CLSID\\{23170F69-20BB-278A-1000-000100020000}\" \/f",
+        "reg delete HKCU\\Software\\Classes\\*\\shellex\\ContextMenuHandlers\\7-Zip-Zstandard \/f",
+        "reg delete HKCU\\Software\\Classes\\Directory\\shellex\\ContextMenuHandlers\\7-Zip-Zstandard \/f",
+        "reg delete HKCU\\Software\\Classes\\Folder\\shellex\\ContextMenuHandlers\\7-Zip-Zstandard \/f",
+        "reg delete HKCU\\Software\\Classes\\Directory\\shellex\\DragDropHandlers\\7-Zip-Zstandard \/f",
+        "reg delete HKCU\\Software\\Classes\\Drive\\shellex\\DragDropHandlers\\7-Zip-Zstandard \/f",
+        "reg delete HKCU\\SOFTWARE\\7-Zip-Zstandard \/f"
     ],
     "bin": [
         "7z.exe",
